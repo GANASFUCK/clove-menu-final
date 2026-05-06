@@ -1586,25 +1586,31 @@
           className: "is-fritti is-wide",
           accent: "#5c2a80"
         },
-        {
-          id: "mini-suppli",
-          category: "fritti",
-          title: "MINI SUPPLI",
-          name: "Tris di mini suppli",
-          ingredients: ["CLASSICO / CACIO E PEPE /", "POMODORO E BASILICO"],
-          highlights: ["Classico", "Cacio e pepe", "Pomodoro", "Basilico"],
-          price: 300,
-          image: "img/MINI_SUPPLI_menu.png",
-          gallery: [
-            "../03_Fritti/F03_Tris_Mini_Suppli/Giulio-di-gregorio-clovo-roma 72.jpg",
-            "../03_Fritti/F03_Tris_Mini_Suppli/Giulio-di-gregorio-clovo-roma 73.jpg",
-            "../03_Fritti/F03_Tris_Mini_Suppli/Giulio-di-gregorio-clovo-roma 74.jpg"
-          ],
-          story: "Tre bocconi, tre direzioni: classico, cacio e pepe, pomodoro.",
-          tags: ["FRITTO", "3,00", "TRIS"],
-          className: "is-fritti",
-          accent: "#d89000"
-        },
+            {
+              id: "mini-suppli",
+              category: "fritti",
+              title: "MINI SUPPLI",
+              name: "Tris di mini suppli",
+              // Aggiorna gli ingredienti per riflettere la nuova ricetta: guacamole di avocado e passion fruit,
+              // pepe rosa e lime con gambero rosso di Mazara, e olio EVO con polvere di carapace.
+              ingredients: [
+                "GUACAMOLE DI AVOCADO / PASSION FRUIT",
+                "PEPE ROSA E LIME / GAMBERO ROSSO DI MAZARA",
+                "OLIO EVO / POLVERE DI CARAPACE"
+              ],
+              highlights: ["Guacamole", "Pepe rosa", "Gambero", "Carapace"],
+              price: 300,
+              // Usa un'immagine grande (cut) per il link e una immagine ridotta (menu) per l'anteprima.
+              image: "img/MINI_SUPPLI_cut.png",
+              menuImage: "img/MINI_SUPPLI_menu.png",
+              gallery: [
+                "img/MINI_SUPPLI_cut.png"
+              ],
+              story: "Tre bocconi, tre direzioni: avocado, pepe rosa e gambero.",
+              tags: ["FRITTO", "3,00", "TRIS"],
+              className: "is-fritti",
+              accent: "#d89000"
+            },
         {
           id: "crema-pasticcera",
           category: "dolci",
@@ -1961,7 +1967,9 @@
       }
 
       function mainImage(product) {
-        return resolvePath(product.image) || resolvePath(product.gallery?.[0]) || "";
+        // Prefer the menuImage if defined (used for smaller, trimmed preview images).
+        // Fallback to the product's image, then the first gallery item.
+        return resolvePath(product.menuImage || product.image) || resolvePath(product.gallery?.[0]) || "";
       }
 
       function renderQtyControl(product, extraClass = "") {
