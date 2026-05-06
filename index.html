@@ -1984,9 +1984,14 @@
             </div>
             <h2 class="${titleClass(product)}">${title}</h2>
             <div class="product-stage">
-              <div class="product-photo-wrap">
-                <img class="product-photo" src="${mainImage(product)}" alt="${product.name}" loading="lazy" decoding="async">
-              </div>
+             <div class="product-photo-wrap">
+               <!-- Wrap the product photo in a link so users can open the full-size image.
+                    The link uses the product's image (large version) or falls back to the first
+                    gallery entry if defined. Opening in a new tab ensures the menu remains in place. -->
+               <a href="${product.image || product.gallery?.[0] || ''}" target="_blank" rel="noopener">
+                 <img class="product-photo" src="${mainImage(product)}" alt="${product.name}" loading="lazy" decoding="async">
+               </a>
+             </div>
             </div>
             <div class="product-meta">
               <div class="price">${formatPrice(product.price)}</div>
@@ -2122,17 +2127,25 @@
           title.textContent = product.title || product.name;
 
           const imageSrc = mainImage(product);
-          const media = imageSrc ? document.createElement("img") : document.createElement("div");
-          if (imageSrc) {
-            media.className = "order-card__img";
-            media.src = imageSrc;
-            media.alt = product.name;
-            media.loading = "lazy";
-            media.decoding = "async";
-          } else {
-            media.className = "order-card__placeholder";
-            media.textContent = product.category;
-          }
+  let media = imageSrc ? document.createElement("img") : document.createElement("div");
+  if (imageSrc) {
+    // Create an anchor link wrapping the image so users can open the full-size product image.
+    media.className = "order-card__img";
+    media.src = imageSrc;
+    media.alt = product.name;
+    media.loading = "lazy";
+    media.decoding = "async";
+    const link = document.createElement("a");
+    // Use product.image (the high‑resolution file) or fallback to the first gallery entry.
+    link.href = product.image || (product.gallery && product.gallery[0]) || "";
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.append(media);
+    media = link;
+  } else {
+    media.className = "order-card__placeholder";
+    media.textContent = product.category;
+  }
 
           const meta = document.createElement("p");
           meta.className = "order-card__meta";
