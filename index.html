@@ -1251,7 +1251,7 @@
     <main class="app-shell">
       <header class="menu-header" aria-label="Header menu">
         <a class="brand-logo" href="#menu-view" aria-label="Clove">
-          <img src="img/logo-clove-purple.png" alt="Clove">
+          <img src="logo-clove-purple.png" alt="Clove">
         </a>
         <div class="header-actions">
           <button class="menu-link" type="button" data-menu-button aria-label="Vai ai tuoi spicchi">
@@ -1313,7 +1313,7 @@
     </main>
 
     <button class="floating-arrow" type="button" data-floating-arrow aria-label="Torna all'inizio">
-      <img src="img/FRECCIA.svg" alt="">
+      <img src="FRECCIA.svg" alt="">
     </button>
 
     <div class="order-transition" data-order-transition hidden aria-hidden="true">
@@ -1953,8 +1953,15 @@
         return ["product-section", product.className, `is-${product.category}`].filter(Boolean).join(" ");
       }
 
+      // Normalize a relative image path by removing a leading 'img/' prefix.
+      // On GitHub Pages our assets live at the repository root, so we strip this
+      // prefix at runtime instead of editing each product definition manually.
+      function resolvePath(path) {
+        return (typeof path === "string" && path.startsWith("img/")) ? path.slice(4) : path || "";
+      }
+
       function mainImage(product) {
-        return product.image || product.gallery?.[0] || "";
+        return resolvePath(product.image) || resolvePath(product.gallery?.[0]) || "";
       }
 
       function renderQtyControl(product, extraClass = "") {
@@ -1988,7 +1995,7 @@
                <!-- Wrap the product photo in a link so users can open the full-size image.
                     The link uses the product's image (large version) or falls back to the first
                     gallery entry if defined. Opening in a new tab ensures the menu remains in place. -->
-               <a href="${product.image || product.gallery?.[0] || ''}" target="_blank" rel="noopener">
+               <a href="${resolvePath(product.image || (product.gallery && product.gallery[0]) || '')}" target="_blank" rel="noopener">
                  <img class="product-photo" src="${mainImage(product)}" alt="${product.name}" loading="lazy" decoding="async">
                </a>
              </div>
@@ -2137,7 +2144,7 @@
     media.decoding = "async";
     const link = document.createElement("a");
     // Use product.image (the high‑resolution file) or fallback to the first gallery entry.
-    link.href = product.image || (product.gallery && product.gallery[0]) || "";
+    link.href = resolvePath(product.image || (product.gallery && product.gallery[0]) || "");
     link.target = "_blank";
     link.rel = "noopener";
     link.append(media);
